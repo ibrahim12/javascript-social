@@ -1,0 +1,28 @@
+#!/bin/bash
+
+export ENV=dev
+
+export PORT=5000
+
+export FLASK_SECRET_KEY='\xadE\xd1\x98\xebs`\xac\xcc\t\xa883\x88,\xc68\x85\xb9I\xfd\xd4\xee#'
+export SECURITY_PASSWORD_SALT=salt here
+
+export FACEBOOK_APP_ID=409923535833635
+export FACEBOOK_APP_SECRET=6d13b60766ae5605c9f1a6a4101b0567
+
+export SECRET_KEY=
+export FACEBOOK_SECRET=
+# export GITHUB_SECRET=
+# export FOURSQUARE_SECRET=
+# export GOOGLE_SECRET=
+# export LINKEDIN_SECRET=
+# export TWITTER_CONSUMER_KEY=
+# export TWITTER_CONSUMER_SECRET=
+# export TWITTER_CALLBACK_URL=
+# export BITBUCKET_SECRET=
+export SQLALCHEMY_DATABASE_URI=sqlite:///app.db
+
+export TZ=America/Los_Angeles
+
+
+
