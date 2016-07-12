@@ -1,14 +1,17 @@
 var path = require('path');
 var webpack = require('webpack');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
-module.exports = {
+var config = {
+  environment : 'development',
+
   // or devtool: 'eval' to debug issues with compiled output:
   devtool: 'cheap-module-eval-source-map',
   entry: [
-    // necessary for hot reloading with IE:
-    'eventsource-polyfill',
+    // // necessary for hot reloading with IE:
+    // 'eventsource-polyfill',
     // listen to code updates emitted by hot middleware:
-    'webpack-hot-middleware/client',
+    // 'webpack-hot-middleware/client',
     // your code:
     './src/javascript.social.js'
   ],
@@ -17,9 +20,20 @@ module.exports = {
     filename: 'javascript.social.js',
     publicPath: '/dist/'
   },
+  "externals": [
+    {
+      "jQuery" : "jQuery"
+    }
+  ],
+  resolve: {
+    extensions: ['', '.js'],
+  },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    // new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new CopyWebpackPlugin([
+      { from : 'dist/javascript.social.js', to: path.join(__dirname, 'examples/client/react/vendor') }
+    ])
   ],
   module: {
     loaders: [{
@@ -29,3 +43,6 @@ module.exports = {
     }]
   }
 };
+
+
+module.exports = config;

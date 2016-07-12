@@ -4,14 +4,14 @@ var config = require('./config.js');
 var http = require('./http.js');
 var Oauth1 = require('./oauth1.js');
 var Oauth2 = require('./oauth2.js');
-
+var shared = require('./shared.utils.js');
 
 function oAuth(){
   var Oauth = {};
 
   Oauth.authenticate = function(name, userData) {
     var provider = config.providers[name].oauthType === '1.0' ? new Oauth1() : new Oauth2();
-    var promise = new Promise(resolve, reject){
+    var promise = new Promise(function(resolve, reject){
 
       provider.open(config.providers[name], userData || {})
         .then(function(response) {
@@ -27,7 +27,7 @@ function oAuth(){
           reject(error);
         });
 
-    }
+    });
     
     return promise;
   };

@@ -15,12 +15,12 @@ function Popup(){
       Popup.url = url;
 
       var stringifiedOptions = Popup.stringifyOptions(Popup.prepareOptions(options));
-      var UA = $window.navigator.userAgent;
+      var UA = window.navigator.userAgent;
       var windowName = (window.cordova || UA.indexOf('CriOS') > -1) ? '_blank' : name;
 
-      Popup.popupWindow = $window.open(url, windowName, stringifiedOptions);
+      Popup.popupWindow = window.open(url, windowName, stringifiedOptions);
 
-      $window.popup = Popup.popupWindow;
+      window.popup = Popup.popupWindow;
 
       if (Popup.popupWindow && Popup.popupWindow.focus) {
         Popup.popupWindow.focus();
@@ -30,7 +30,7 @@ function Popup(){
     };
 
     Popup.eventListener = function(redirectUri) {
-      var p1 = new Promise(){
+      var p1 = new Promise(
           function(resolve, reject){
             Popup.popupWindow.addEventListener('loadstart', function(event) {
               if (event.url.indexOf(redirectUri) !== 0) {
@@ -58,9 +58,8 @@ function Popup(){
 
             Popup.popupWindow.addEventListener('loaderror', function() {
               reject('Authorization Failed');
-            });
-          }
-      }
+            }); 
+      });
 
       return p1;
 
@@ -113,6 +112,7 @@ function Popup(){
                 Popup.popupWindow.close();
               }
             } catch (error) {
+              // console.log(error);
               // Ignore DOMException: Blocked a frame with origin from accessing a cross-origin frame.
               // A hack to get around same-origin security policy errors in IE.
             }

@@ -9,7 +9,7 @@ function Config(){
       signupUrl: '/auth/signup',
       unlinkUrl: '/auth/unlink',
       tokenName: 'token',
-      tokenPrefix: 'satellizer',
+      tokenPrefix: 'js_social',
       authHeader: 'Authorization',
       authToken: 'Bearer',
       storageType: 'localStorage',

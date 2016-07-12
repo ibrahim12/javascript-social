@@ -2,7 +2,7 @@
 var http = require('./http.js');
 var shared = require('./shared.utils.js');
 var utils = require("./utils.js");
-
+var config = require("./config.js");
 
 function AuthLocal(){
 

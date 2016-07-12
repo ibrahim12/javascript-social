@@ -1,5 +1,6 @@
 "use strict"
 
+
 function getFullUrlPath(location) {
     var isHttps = location.protocol === 'https:';
     return location.protocol + '//' + location.hostname +
@@ -15,11 +16,11 @@ function camelCase(name) {
 
 function parseQueryString(keyValue) {
     var obj = {}, key, value;
-    angular.forEach((keyValue || '').split('&'), function(keyValue) {
+    forEach((keyValue || '').split('&'), function(keyValue) {
       if (keyValue) {
         value = keyValue.split('=');
         key = decodeURIComponent(value[0]);
-        obj[key] = angular.isDefined(value[1]) ? decodeURIComponent(value[1]) : true;
+        obj[key] = isDefined(value[1]) ? decodeURIComponent(value[1]) : true;
       }
     });
     return obj;
@@ -75,7 +76,7 @@ function isString(value) {return typeof value === 'string';}
 
 
 function extend(dst){
-  return Object.assign(dst, slice.call(arguments, 1));
+  return jQuery.extend(true, dst, arguments[1])
 }
 
 function isUndefined(value) {return typeof value === 'undefined';}
@@ -87,47 +88,11 @@ function isBlankObject(value) {
 function isFunction(value) {return typeof value === 'function';}
 
 function forEach(obj, iterator, context) {
-  var key, length;
-  if (obj) {
-    if (isFunction(obj)) {
-      for (key in obj) {
-        if (key !== 'prototype' && key !== 'length' && key !== 'name' && obj.hasOwnProperty(key)) {
-          iterator.call(context, obj[key], key, obj);
-        }
-      }
-    } else if (isArray(obj) || isArrayLike(obj)) {
-      var isPrimitive = typeof obj !== 'object';
-      for (key = 0, length = obj.length; key < length; key++) {
-        if (isPrimitive || key in obj) {
-          iterator.call(context, obj[key], key, obj);
-        }
-      }
-    } else if (obj.forEach && obj.forEach !== forEach) {
-        obj.forEach(iterator, context, obj);
-    } else if (isBlankObject(obj)) {
-      // createMap() fast path --- Safe to avoid hasOwnProperty check because prototype chain is empty
-      for (key in obj) {
-        iterator.call(context, obj[key], key, obj);
-      }
-    } else if (typeof obj.hasOwnProperty === 'function') {
-      // Slow path for objects inheriting Object.prototype, hasOwnProperty check needed
-      for (key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          iterator.call(context, obj[key], key, obj);
-        }
-      }
-    } else {
-      // Slow path for objects which do not have a method `hasOwnProperty`
-      for (key in obj) {
-        if (hasOwnProperty.call(obj, key)) {
-          iterator.call(context, obj[key], key, obj);
-        }
-      }
-    }
-  }
-  return obj;
+  
+  jQuery.each(obj, function(key, value){
+    iterator.call(context, value, key);
+  });
 }
-
 
 module.exports = {
   getFullUrlPath : getFullUrlPath,

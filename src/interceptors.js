@@ -44,7 +44,7 @@ function AngularHttpInterceptor(){
 
 function jQueryHttpInterceptor(){
 
-  jQuery.ajaxSend(function( event, jqxhr, settings ) {
+  jQuery( document ).ajaxSend(function( event, jqxhr, settings ) {
       var token = _getRequestAuthToken(jqxhr);
       if( token ){
           jqxhr.setRequestHeader(config.authHeader, token)

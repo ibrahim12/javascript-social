@@ -33,7 +33,7 @@ function SharedUtil(){
       return console.warn('Can\'t set token without passing a value');
     }
 
-    var accessToken = response && response.access_token;
+    var accessToken = response && ( response.access_token || response.token );
     var token;
 
     if (accessToken) {

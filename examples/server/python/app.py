@@ -16,7 +16,7 @@ from jwt import DecodeError, ExpiredSignature
 # Configuration
 
 current_path = os.path.dirname(__file__)
-client_path = os.path.abspath(os.path.join(current_path, '..', '..', 'client'))
+client_path = os.path.abspath(os.path.join(current_path, '..', '..', 'client/react'))
 
 app = Flask(__name__, static_url_path='', static_folder=client_path)
 app.config.from_object('config')
@@ -129,8 +129,8 @@ def me():
 
 @app.route('/auth/login', methods=['POST'])
 def login():
-    user = User.query.filter_by(email=request.json['email']).first()
-    if not user or not user.check_password(request.json['password']):
+    user = User.query.filter_by(email=request.form.get('email')).first()
+    if not user or not user.check_password(request.form.get('password')):
         response = jsonify(message='Wrong Email or Password')
         response.status_code = 401
         return response
@@ -216,7 +216,7 @@ def github():
     # Step 1. Exchange authorization code for access token.
     r = requests.get(access_token_url, params=params)
     access_token = dict(parse_qsl(r.text))
-    headers = {'User-Agent': 'Satellizer'}
+    headers = {'User-Agent': 'JavascriptSocial'}
 
     # Step 2. Retrieve information about the current user.
     r = requests.get(users_api_url, params=access_token, headers=headers)
@@ -263,10 +263,10 @@ def google():
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     people_api_url = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect'
 
-    payload = dict(client_id=request.json['clientId'],
-                   redirect_uri=request.json['redirectUri'],
+    payload = dict(client_id=request.form.get('clientId'),
+                   redirect_uri=request.form.get('redirectUri'),
                    client_secret=app.config['GOOGLE_SECRET'],
-                   code=request.json['code'],
+                   code=request.form.get('code'),
                    grant_type='authorization_code')
 
     # Step 1. Exchange authorization code for access token.
@@ -301,6 +301,7 @@ def google():
 
     # Step 4. Create a new account or return an existing one.
 
+    print profile
     user = User.query.filter_by(google=profile['sub']).first()
     if user:
         token = create_token(user)

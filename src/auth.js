@@ -2,6 +2,8 @@
 var config = require('./config.js');
 var shared = require('./shared.utils.js');
 var local = require('./auth.local.js');
+var utils = require('./utils.js');
+var oAuth = require('./oauth.js');
 
 function Auth(){
 
@@ -64,15 +66,15 @@ function Auth(){
         }
     });
 
-    angular.forEach(Object.keys(config.providers), function(provider) {
+    utils.forEach(Object.keys(config.providers), function(provider) {
         this[provider] = function(params) {
-          return angular.extend(config.providers[provider], params);
+          return utils.extend(config.providers[provider], params);
         };
     }, this);
 
     var oauth = function(params) {
         config.providers[params.name] = config.providers[params.name] || {};
-        angular.extend(config.providers[params.name], params);
+        utils.extend(config.providers[params.name], params);
     };
 
     this.oauth1 = function(params) {
@@ -100,15 +102,15 @@ function Auth(){
     };
 
     _auth.authenticate = function(name, userData) {
-        return oauth.authenticate(name, userData);
+        return oAuth.authenticate(name, userData);
     };
 
     _auth.link = function(name, userData) {
-        return oauth.authenticate(name, userData);
+        return oAuth.authenticate(name, userData);
     };
 
     _auth.unlink = function(provider, opts) {
-        return oauth.unlink(provider, opts);
+        return oAuth.unlink(provider, opts);
     };
 
     _auth.isAuthenticated = function() {
