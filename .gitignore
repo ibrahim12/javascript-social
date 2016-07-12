@@ -39,3 +39,5 @@ jspm_packages
 # Virtual Environments
 .env
 setenv
+
+dist/
