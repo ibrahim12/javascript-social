@@ -32,26 +32,29 @@ function oAuth2(){
     Oauth2.open = function(options, userData) {
       defaults = merge(options, defaults);
       var promise = new Promise(function(resolve, reject){
+          var url;
+          var openPopup;
+          var openPopupPromise;
+          var stateName = defaults.name + '_state';
+
+          if (utils.isFunction(defaults.state)) {
+            storage.set(stateName, defaults.state());
+          } else if (isString(defaults.state)) {
+            storage.set(stateName, defaults.state);
+          }
+
+          url = [defaults.authorizationEndpoint, Oauth2.buildQueryString()].join('?');
+
+          if (window.cordova) {
+            openPopup = popup.open(url, defaults.name, defaults.popupOptions, defaults.redirectUri);
+            openPopupPromise = openPopup.eventListener(defaults.redirectUri);
+          } else {
+            openPopup = popup.open(url, defaults.name, defaults.popupOptions, defaults.redirectUri);
+            openPopupPromise = openPopup.pollPopup(defaults.redirectUri);
+          }
+
           setTimeout(function () {
-            var url;
-            var openPopup;
-            var stateName = defaults.name + '_state';
-
-            if (utils.isFunction(defaults.state)) {
-              storage.set(stateName, defaults.state());
-            } else if (isString(defaults.state)) {
-              storage.set(stateName, defaults.state);
-            }
-
-            url = [defaults.authorizationEndpoint, Oauth2.buildQueryString()].join('?');
-
-            if (window.cordova) {
-              openPopup = popup.open(url, defaults.name, defaults.popupOptions, defaults.redirectUri).eventListener(defaults.redirectUri);
-            } else {
-              openPopup = popup.open(url, defaults.name, defaults.popupOptions, defaults.redirectUri).pollPopup(defaults.redirectUri);
-            }
-
-            openPopup
+            openPopupPromise
               .then(function(oauthData) {
                 // When no server URL provided, return popup params as-is.
                 // This is for a scenario when someone wishes to opt out from
